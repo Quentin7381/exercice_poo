@@ -1,0 +1,1 @@
+{"version":1,"defects":{"DBConnectTest::test__phpunitWorks":4,"DBConnectTest::test__instanceIsValid":4},"times":{"DBConnectTest::test__phpunitWorks":0.006,"DBConnectTest::test__instanceIsValid":0.051}}

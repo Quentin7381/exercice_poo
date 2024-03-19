@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Commands.php';
+require_once 'src/Autoloader.php';
 
 $commands = Commands::get();
 
