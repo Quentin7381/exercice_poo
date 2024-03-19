@@ -1,6 +1,10 @@
 <?php
 
+require_once 'Commands.php';
+
+$commands = Commands::get();
+
 while(true){
     $line = readline("Entrez votre commande: ");
-    echo "Vous avez saisi: $line\n";
+    $commands->$line();
 }
