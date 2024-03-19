@@ -17,6 +17,7 @@ class DBConnect extends PDO{
             ';dbname=' . $config['dbname'],
             $config['user'],
             $config['password']);
+        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     public function getConfig(){

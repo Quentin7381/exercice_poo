@@ -6,5 +6,7 @@ $commands = Commands::get();
 
 while(true){
     $line = readline("Entrez votre commande: ");
-    $commands->$line();
+    $args = explode(' ', $line);
+    $command = array_shift($args);
+    $commands->$command(...$args);
 }

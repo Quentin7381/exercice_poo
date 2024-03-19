@@ -1,5 +1,11 @@
 # Versions du programme Carnet de Contact
 
+## 1.3.1 Commandes delete, create
+
+Ajout commande delete
+Ajout commande create
+Gestion supression contact innexistant
+
 ## 1.2.1 implementation premieres commandes
 
 Ajout commande list (ContactManager->find())

@@ -155,13 +155,13 @@ class Query {
 
         foreach($conditions as $condition){
             try{
-                $condition = Condition::generate($condition);
+                $condition = new Condition(...$condition);
             } catch(Exception $e){
                 throw EF::instance_wrong_parameter(
                     'conditions',
                     $conditions,
                     'Associative array',
-                    'Confition::generate() failed with the following exception: ' . $e->getMessage(),
+                    'Condition::generate() failed with the following exception: ' . $e->getMessage(),
                     $e,
                     1
                 );

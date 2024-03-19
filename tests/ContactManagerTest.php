@@ -22,4 +22,24 @@ class ContactManagerTest extends TestSetup{
         }
     }
 
+    function test__create_delete(){
+        // Create renvoie le contact créé avec son id
+        $manager = ContactManager::get();
+        $result = $manager->create(
+            'John',
+            'jhon@mail.com',
+            '0123456789'
+        );
+
+        $this->assertInstanceOf(Contact::class, $result);
+        $this->assertNotEmpty($result->id);
+        $this->assertEquals('John', $result->name);
+        $this->assertEquals('jhon@mail.com', $result->email);
+        $this->assertEquals('0123456789', $result->phone);
+
+        // Delete
+        $success = $manager->delete($result->id);
+        $this->assertTrue($success);
+        $this->assertEmpty($manager->find(["id"=> $result->id]));
+    }
 }
