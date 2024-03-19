@@ -1,5 +1,10 @@
 # Versions du programme Carnet de Contact
 
+## 1.2.1 implementation premieres commandes
+
+Ajout commande list (ContactManager->find())
+Ajout commande exit
+
 ## 1.2.0 Find et associes
 
 Ajout de la classe DBConnect
