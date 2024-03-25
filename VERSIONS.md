@@ -1,5 +1,17 @@
 # Versions du programme Carnet de Contact
 
+## 1.4.2 Commentaires et typage
+
+Fix mineurs
+Fix exceptions sur arguments manquants
+Ajout de commentaires
+Ajout de typage
+
+## 1.4.1 Commandes help (mise a jour), update
+
+Mise a jour commande help avec nouvelles fonctions
+Ajout commande update
+
 ## 1.3.1 Commandes delete, create
 
 Ajout commande delete

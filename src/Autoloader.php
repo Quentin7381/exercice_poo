@@ -1,10 +1,20 @@
 <?php
 
+/**
+ * Class Autoloader
+ * Permet de charger automatiquement les classes
+ * Le dossier cible est la propriété rootDir
+ */
 class Autoloader{
 
     protected $rootDir = __DIR__;
 
-    public function __construct($rootDir = null){
+    /**
+     * Initialise et enregistre la fonction autoload
+     *
+     * @param string|null $rootDir Dossier cible
+     */
+    public function __construct(?string $rootDir = null){
         if($rootDir != null){
             $this->rootDir = $rootDir;
         }
@@ -12,7 +22,12 @@ class Autoloader{
         spl_autoload_register(array($this, 'autoload'));
     }
 
-    public function autoload($className){
+    /**
+     * Charge une classe
+     *
+     * @param $className Nom de la classe
+     */
+    public function autoload($className):void{
         $path = $this->rootDir . '/' . $className . '.php';
         if(file_exists($path)){
             require_once $path;

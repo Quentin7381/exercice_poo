@@ -42,4 +42,34 @@ class ContactManagerTest extends TestSetup{
         $this->assertTrue($success);
         $this->assertEmpty($manager->find(["id"=> $result->id]));
     }
+
+    function test__update(){
+        $manager = ContactManager::get();
+        $result = $manager->update(
+            '1',
+            'darkUpdated',
+            'mail@updated.com',
+            '9876543210'
+        );
+
+        $this->assertTrue($result);
+
+        $contact = $manager->find(['id'=> '1'])[0] ?? null;
+
+        $this->assertInstanceOf(Contact::class, $contact);
+        $this->assertEquals('1', $contact->id);
+        $this->assertEquals('darkUpdated', $contact->name);
+        $this->assertEquals('mail@updated.com', $contact->email);
+        $this->assertEquals('9876543210', $contact->phone);
+
+        $success = $manager->update('0','','','');
+        $this->assertFalse($success);
+
+        $manager->update(
+            '1',
+            'darkVador',
+            'vador@empire.com',
+            '0666666666'
+        );
+    }
 }

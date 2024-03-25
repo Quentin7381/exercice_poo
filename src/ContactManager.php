@@ -1,24 +1,50 @@
 <?php
 
+/**
+ * Permet de gerer les contacts
+ */
 class ContactManager{
+    /**
+     * @var array $columns Colonnes de la table contact
+     */
     protected static $columns = ['id', 'name', 'email', 'phone_number'];
+    /**
+     * @var ContactManager $instance Instance Singleton
+     */
     protected static $instance = null;
+    /**
+     * @var PDO $db Instance de connexion à la base de donnees
+     */
     protected static $db;
 
-    public static function get(){
+    /**
+     * @return ContactManager Instance Singleton de la classe
+     */
+    public static function get():?ContactManager{
         if(self::$instance == null){
             self::$instance = new ContactManager();
         }
         return self::$instance;
     }
     
+    /**
+     * Constructeur de la classe
+     * Initialise la connexion à la base de donnees
+     */
     protected function __construct(){
         if(self::$db == null){
             self::$db = new DBConnect();
         }
     }
 
-    public function find($arguments = []){
+    /**
+     * Permet de rechercher des contacts
+     * @param array $arguments Arguments de recherche
+     * Les arguments de recherche sont un tableau de paires clef->valeurAttendue
+     * 
+     * @return array Tableau de contacts
+     */
+    public function find(array $arguments = []):array{
         // Creation de la requete
         $query = new Query();
         $query->select('*');
@@ -39,6 +65,10 @@ class ContactManager{
         // Traitement des resultats
         $contacts = [];
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            if(empty($row) || empty($row['id'])){
+                continue;
+            }
+            
             $contacts[] = new Contact(
                 $row['id'] ?? '',
                 $row['name'] ?? '',
@@ -50,7 +80,13 @@ class ContactManager{
         return $contacts;
     }
 
-    public function create($name, $email, $phone){
+    /**
+     * Permet de creer un contact
+     * @param string $name Nom du contact
+     * @param string $email Email du contact
+     * @param string $phone Téléphone du contact
+     */
+    public function create(string $name, string $email, string $phone):?Contact{
         $query = new Query();
         $query->insert_into('contact');
         $query->values(['name' => 'name', 'email'=> 'email','phone_number'=> 'phone']);
@@ -68,13 +104,19 @@ class ContactManager{
 
         // Recuperation du contact cree
         $contacts = $this->find(['id'=> $id]);
-        $contact = $contacts[0];
+        $contact = $contacts[0] ?? null;
 
         return $contact;
     }
 
-    public function delete($id){
+    /**
+     * Permet de supprimer un contact
+     * @param string  $id Identifiant du contact (represente un INT)
+     * @return bool Resultat de la suppression
+     */
+    public function delete(string $id):bool{
         if(empty($this->find(['id'=> $id]))){
+            // Apparement, pas d'exception PDO ni de $success a false si contact inexistant
             return false;
         }
 
@@ -85,6 +127,37 @@ class ContactManager{
         
         $stmt = self::$db->prepare($query);
         $success = $stmt->execute([':id' => $id]);
+        return $success;
+    }
+
+    /**
+     * Permet de mettre à jour un contact
+     * @param string $id Identifiant du contact (represente un INT)
+     * @param string $name Nom du contact
+     * @param string $email Email du contact
+     * @param string $phone Téléphone du contact
+     * @return bool Resultat de la mise à jour
+     */
+    public function update(string $id, string $name, string $email, string $phone):bool{
+        if(empty($this->find(['id'=> $id]))){
+            return false;
+        }
+
+        $query = new Query();
+        $query->update('contact');
+        $query->set([['name', 'name'], ['email', 'email'], ['phone_number', 'phone']]);
+        $query->where([['id', 'id']]);
+        $query = $query->print();
+        
+        $arguments = [
+            ':id' => $id,
+            ':name' => $name,
+            ':email'=> $email,
+            ':phone'=> $phone
+        ];
+
+        $stmt = self::$db->prepare($query);
+        $success = $stmt->execute($arguments);
         return $success;
     }
 }

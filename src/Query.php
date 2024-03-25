@@ -283,7 +283,7 @@ class Query {
         
         foreach($sets as $set){
             if(!($set instanceof Set)){
-                $set = Set::generate($set);
+                $set = Set::generate(...$set);
             }
 
             if($parametric){
