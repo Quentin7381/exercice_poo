@@ -32,7 +32,8 @@ use ExceptionFactory as EF;
  * @method delete($table) : Ajoute la table de suppression
  * @method where($conditions) : Ajoute les conditions de suppression @see Condition
  */
-class Query {
+class Query
+{
 
     protected static $validFields = [
         'operation',
@@ -62,13 +63,14 @@ class Query {
         'set' => null
     ];
 
-    public function reset($fields = []){
-        if(empty($fields)){
+    public function reset($fields = [])
+    {
+        if (empty ($fields)) {
             $fields = self::$validFields;
         }
-        
-        foreach($fields as $field){
-            if(!in_array($field, self::$validFields)){
+
+        foreach ($fields as $field) {
+            if (!in_array($field, self::$validFields)) {
                 throw new Exception('Invalid field');
             }
             $this->querry[$field] = null;
@@ -76,14 +78,16 @@ class Query {
     }
 
     // ----- INSERT ----- //
-    public function insert_into($table){
+    public function insert_into($table)
+    {
         $this->reset();
         $this->querry['operation'] = 'INSERT';
         $this->querry['table'] = $table;
     }
 
-    public function values($values, $parametric = true){
-        if($this->querry['operation'] != 'INSERT'){
+    public function values($values, $parametric = true)
+    {
+        if ($this->querry['operation'] != 'INSERT') {
             throw EF::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -92,7 +96,7 @@ class Query {
             );
         }
 
-        if(!isAssoc($values)){
+        if (!isAssoc($values)) {
             throw EF::instance_wrong_parameter(
                 'values',
                 $values,
@@ -100,24 +104,25 @@ class Query {
                 'The values must be an associative array of column => value'
             );
         }
-        
-        foreach($values as $column => $value){
+
+        foreach ($values as $column => $value) {
             $this->querry['columns'][] = $column;
-            if($parametric){
+            if ($parametric) {
                 $this->querry['values'][] = ':' . $value;
-            }else{
+            } else {
                 $this->querry['values'][] = $value;
             }
         }
     }
 
     // ----- SELECT ----- //
-    public function select($fields){
-        if(!is_array($fields)){
+    public function select($fields)
+    {
+        if (!is_array($fields)) {
             $fields = [$fields];
         }
 
-        if(empty($fields)){
+        if (empty ($fields)) {
             throw EF::argument_array_wrong_count(
                 'fields',
                 $fields,
@@ -131,8 +136,9 @@ class Query {
         $this->querry['columns'] = $fields;
     }
 
-    public function from($table){
-        if($this->querry['operation'] != 'SELECT'){
+    public function from($table)
+    {
+        if ($this->querry['operation'] != 'SELECT') {
             throw ExceptionFactory::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -143,8 +149,9 @@ class Query {
         $this->querry['table'] = $table;
     }
 
-    public function where(array $conditions, $parametric = true){
-        if(!in_array($this->querry['operation'], ['SELECT', 'UPDATE', 'DELETE'])){
+    public function where(array $conditions, $parametric = true)
+    {
+        if (!in_array($this->querry['operation'], ['SELECT', 'UPDATE', 'DELETE'])) {
             throw EF::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -153,10 +160,10 @@ class Query {
             );
         }
 
-        foreach($conditions as $condition){
-            try{
+        foreach ($conditions as $condition) {
+            try {
                 $condition = new Condition(...$condition);
-            } catch(Exception $e){
+            } catch (Exception $e) {
                 throw EF::instance_wrong_parameter(
                     'conditions',
                     $conditions,
@@ -167,15 +174,16 @@ class Query {
                 );
             }
 
-            if($parametric){
+            if ($parametric) {
                 $condition->value = ':' . $condition->value;
             }
             $this->querry['where'][] = $condition;
         }
     }
 
-    public function order_by($orders){
-        if($this->querry['operation'] != 'SELECT'){
+    public function order_by($orders)
+    {
+        if ($this->querry['operation'] != 'SELECT') {
             throw EF::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -183,12 +191,12 @@ class Query {
                 'Use the select() method to set the operation to SELECT.'
             );
         }
-        
-        if(!is_array($orders)){
+
+        if (!is_array($orders)) {
             $orders = [$orders];
         }
-        foreach($orders as $order){
-            if(!($order instanceof Order)){
+        foreach ($orders as $order) {
+            if (!($order instanceof Order)) {
                 $order = Order::generate($order);
             }
 
@@ -196,8 +204,9 @@ class Query {
         }
     }
 
-    public function limit($limit, $offset = null){
-        if($this->querry['operation'] != 'SELECT'){
+    public function limit($limit, $offset = null)
+    {
+        if ($this->querry['operation'] != 'SELECT') {
             throw EF::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -208,8 +217,9 @@ class Query {
         $this->querry['limit'] = $limit;
     }
 
-    public function offset($offset){
-        if($this->querry['operation'] != 'SELECT'){
+    public function offset($offset)
+    {
+        if ($this->querry['operation'] != 'SELECT') {
             throw EF::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -220,8 +230,9 @@ class Query {
         $this->querry['offset'] = $offset;
     }
 
-    public function group_by($columns){
-        if($this->querry['operation'] != 'SELECT'){
+    public function group_by($columns)
+    {
+        if ($this->querry['operation'] != 'SELECT') {
             throw EF::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -229,14 +240,15 @@ class Query {
                 'Use the select() method to set the operation to SELECT.'
             );
         }
-        if(!is_array($columns)){
+        if (!is_array($columns)) {
             $columns = [$columns];
         }
         $this->querry['group_by'] = $columns;
     }
 
-    public function having($conditions){
-        if($this->querry['operation'] != 'SELECT'){
+    public function having($conditions)
+    {
+        if ($this->querry['operation'] != 'SELECT') {
             throw EF::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -244,11 +256,11 @@ class Query {
                 'Use the select() method to set the operation to SELECT.'
             );
         }
-        
-        foreach($conditions as $condition){
-            try{
+
+        foreach ($conditions as $condition) {
+            try {
                 $condition = Condition::generate($condition);
-            } catch(Exception $e){
+            } catch (Exception $e) {
                 throw EF::instance_wrong_parameter(
                     'conditions',
                     $conditions,
@@ -265,14 +277,16 @@ class Query {
 
     // ----- UPDATE ----- //
 
-    public function update($table){
+    public function update($table)
+    {
         $this->reset();
         $this->querry['operation'] = 'UPDATE';
         $this->querry['table'] = $table;
     }
 
-    public function set($sets, $parametric = true){
-        if($this->querry['operation'] != 'UPDATE'){
+    public function set($sets, $parametric = true)
+    {
+        if ($this->querry['operation'] != 'UPDATE') {
             throw EF::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -280,13 +294,13 @@ class Query {
                 'Use the update() method to set the operation to UPDATE.'
             );
         }
-        
-        foreach($sets as $set){
-            if(!($set instanceof Set)){
+
+        foreach ($sets as $set) {
+            if (!($set instanceof Set)) {
                 $set = Set::generate(...$set);
             }
 
-            if($parametric){
+            if ($parametric) {
                 $set->value = ':' . $set->value;
             }
             $this->querry['set'][] = $set;
@@ -295,7 +309,8 @@ class Query {
 
     // ----- DELETE ----- //
 
-    public function delete($table){
+    public function delete($table)
+    {
         $this->reset();
         $this->querry['operation'] = 'DELETE';
         $this->querry['table'] = $table;
@@ -303,9 +318,10 @@ class Query {
 
     // ----- PRINT ----- //
 
-    public function print(){
+    public function print()
+    {
         $valid_operations = ['SELECT', 'INSERT', 'UPDATE', 'DELETE'];
-        if(empty($this->querry['operation']) || !in_array($this->querry['operation'], $valid_operations)){
+        if (empty ($this->querry['operation']) || !in_array($this->querry['operation'], $valid_operations)) {
             throw EF::instance_wrong_parameter(
                 'operation',
                 $this->querry['operation'],
@@ -318,8 +334,9 @@ class Query {
         return $this->$method();
     }
 
-    protected function print_select(){
-        if(empty($this->querry['columns']) || empty($this->querry['table'])){
+    protected function print_select()
+    {
+        if (empty ($this->querry['columns']) || empty ($this->querry['table'])) {
             throw EF::instance_wrong_parameter(
                 'columns or table',
                 $this->querry['columns'] . ' or ' . $this->querry['table'],
@@ -339,43 +356,48 @@ class Query {
         return $str;
     }
 
-    protected function print_insert(){
+    protected function print_insert()
+    {
         $str = 'INSERT INTO ' . $this->querry['table'] . ' ';
         $str .= '(' . implode(', ', $this->querry['columns']) . ') ';
         $str .= 'VALUES (' . implode(', ', $this->querry['values']) . ') ';
         return $str;
     }
 
-    protected function print_update(){
+    protected function print_update()
+    {
         $str = 'UPDATE ' . $this->querry['table'] . ' ';
         $str .= $this->print_set() . ' ';
         $str .= $this->print_where() . ' ';
         return $str;
     }
 
-    protected function print_delete(){
+    protected function print_delete()
+    {
         $str = 'DELETE ';
         $str .= 'FROM ' . $this->querry['table'] . ' ';
         $str .= $this->print_where() . ' ';
         return $str;
     }
 
-    protected function print_set(){
+    protected function print_set()
+    {
         $str = 'SET ';
-        $str .= implode(', ', array_map(function($set){
+        $str .= implode(', ', array_map(function ($set) {
             return $set->column . ' = ' . $set->value;
         }, $this->querry['set']));
         return $str;
     }
 
-    protected function print_where(){
-        if(empty($this->querry['where'])){
+    protected function print_where()
+    {
+        if (empty ($this->querry['where'])) {
             return '';
         }
         $str = 'WHERE ';
-        
-        foreach($this->querry['where'] as $key => $condition){
-            if($key != 0){
+
+        foreach ($this->querry['where'] as $key => $condition) {
+            if ($key != 0) {
                 $str .= $condition->connector . ' ';
             }
             $str .= $condition->column . ' ';
@@ -386,20 +408,22 @@ class Query {
         return $str;
     }
 
-    protected function print_order_by(){
-        if(empty($this->querry['order_by'])){
+    protected function print_order_by()
+    {
+        if (empty ($this->querry['order_by'])) {
             return '';
         }
         $str = 'ORDER BY ';
-        $str .= implode(', ', array_map(function($order){
+        $str .= implode(', ', array_map(function ($order) {
             return $order->field . ' ' . $order->order;
         }, $this->querry['order_by']));
         return $str;
     }
 
-    protected function print_limit(){
+    protected function print_limit()
+    {
         $str = '';
-        if(!empty($this->querry['limit'])){
+        if (!empty ($this->querry['limit'])) {
             $str .= 'LIMIT ' . $this->querry['limit'] . ' ';
         }
         $str .= $this->print_offset();
@@ -407,28 +431,31 @@ class Query {
         return $str;
     }
 
-    protected function print_offset(){
-        if(empty($this->querry['offset'])){
+    protected function print_offset()
+    {
+        if (empty ($this->querry['offset'])) {
             return '';
         }
         return 'OFFSET ' . $this->querry['offset'];
     }
 
-    protected function print_group_by(){
-        if(empty($this->querry['group_by'])){
+    protected function print_group_by()
+    {
+        if (empty ($this->querry['group_by'])) {
             return '';
         }
         return 'GROUP BY ' . implode(', ', $this->querry['group_by']);
     }
 
-    protected function print_having(){
-        if(empty($this->querry['having'])){
+    protected function print_having()
+    {
+        if (empty ($this->querry['having'])) {
             return '';
         }
         $str = 'HAVING ';
-        
-        foreach($this->querry['having'] as $key => $condition){
-            if($key != 0){
+
+        foreach ($this->querry['having'] as $key => $condition) {
+            if ($key != 0) {
                 $str .= $condition->connector . ' ';
             }
             $str .= $condition->column . ' ';
@@ -443,17 +470,20 @@ class Query {
 /**
  * Un tableau associatif de
  */
-class Set{
+class Set
+{
     public $column;
     public $value;
 
-    public function __construct($column, $value){
+    public function __construct($column, $value)
+    {
         $this->column = $column;
         $this->value = $value;
     }
 
-    public static function generate(...$args){
-        if(empty($args) || count($args) > 2){
+    public static function generate(...$args)
+    {
+        if (empty ($args) || count($args) > 2) {
             throw EF::argument_array_wrong_count(
                 'args',
                 count($args),
@@ -463,8 +493,8 @@ class Set{
             );
         }
 
-        if(!isAssoc($args)){
-            if(count($args) == 1){
+        if (!isAssoc($args)) {
+            if (count($args) == 1) {
                 $args = [
                     'column' => $args[0],
                     'value' => $args[0]
@@ -474,7 +504,7 @@ class Set{
             }
         }
 
-        if(!isset($args['column'])){
+        if (!isset ($args['column'])) {
             throw EF::argument_array_missing_key('column');
         }
 
@@ -482,17 +512,20 @@ class Set{
     }
 }
 
-class Order{
+class Order
+{
     public $field;
     public $order;
 
-    public function __construct($field, $order = 'ASC'){
+    public function __construct($field, $order = 'ASC')
+    {
         $this->field = $field;
         $this->order = $order;
     }
 
-    public static function generate(...$args){
-        if(empty($args) || count($args) > 2){
+    public static function generate(...$args)
+    {
+        if (empty ($args) || count($args) > 2) {
             throw EF::argument_array_wrong_count(
                 'args',
                 count($args),
@@ -502,12 +535,12 @@ class Order{
             );
         }
 
-        if(!isAssoc($args)){
+        if (!isAssoc($args)) {
             $keys = array_slice(['field', 'order'], 0, count($args));
             $args = array_combine($keys, $args);
         }
 
-        if(!isset($args['field'])){
+        if (!isset ($args['field'])) {
             throw EF::argument_array_missing_key('field');
         }
 
@@ -515,35 +548,38 @@ class Order{
     }
 }
 
-class Condition{
+class Condition
+{
     public $column;
     public $value;
     public $operator;
     public $connector;
 
-    public function __construct($column, $value, $operator = '=', $connector = 'AND'){
+    public function __construct($column, $value, $operator = '=', $connector = 'AND')
+    {
         $this->column = $column;
         $this->operator = $operator;
         $this->value = $value;
         $this->connector = $connector;
     }
 
-    public static function generate(...$args){
+    public static function generate(...$args)
+    {
         // Gestion du cas ou le premier et unique argument est un objet Condition
-        if(count($args) === 1 && $args[0] instanceof Condition){
+        if (count($args) === 1 && $args[0] instanceof Condition) {
             return $args[0];
         }
 
         $keys = ['column', 'value', 'operator', 'connector'];
 
         // Extraction des arguments s'ils sont passes sous forme de tableau
-        if(count($args) === 1 && is_array($args[0]) && !isAssoc($args[0])){
+        if (count($args) === 1 && is_array($args[0]) && !isAssoc($args[0])) {
             $args = $args[0];
         }
 
         // Gestion du cas ou les arguments sont passes un par un
-        if(!isAssoc($args[0])){
-            if(count($args) < 2 || count($args) > 4){
+        if (!isAssoc($args[0])) {
+            if (count($args) < 2 || count($args) > 4) {
                 throw EF::argument_array_wrong_count(
                     'args',
                     count($args),
@@ -557,9 +593,9 @@ class Condition{
             $args = array_combine($keys, $args);
         }
 
-        if(
-            !isset($args['column']) ||
-            !isset($args['value'])
+        if (
+            !isset ($args['column']) ||
+            !isset ($args['value'])
         ) {
             throw EF::argument_array_missing_key('args', 'column or value', null, null, 1);
         }
@@ -573,6 +609,7 @@ class Condition{
     }
 }
 
-function isAssoc($arr){
+function isAssoc($arr)
+{
     return array_values($arr) !== $arr;
 }

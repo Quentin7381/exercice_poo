@@ -5,7 +5,8 @@
  * Permet de charger automatiquement les classes
  * Le dossier cible est la propriété rootDir
  */
-class Autoloader{
+class Autoloader
+{
 
     protected $rootDir = __DIR__;
 
@@ -14,8 +15,9 @@ class Autoloader{
      *
      * @param string|null $rootDir Dossier cible
      */
-    public function __construct(?string $rootDir = null){
-        if($rootDir != null){
+    public function __construct(?string $rootDir = null)
+    {
+        if ($rootDir != null) {
             $this->rootDir = $rootDir;
         }
 
@@ -27,9 +29,10 @@ class Autoloader{
      *
      * @param $className Nom de la classe
      */
-    public function autoload($className):void{
+    public function autoload($className): void
+    {
         $path = $this->rootDir . '/' . $className . '.php';
-        if(file_exists($path)){
+        if (file_exists($path)) {
             require_once $path;
         }
     }

@@ -1,12 +1,14 @@
 <?php
 
-require_once __DIR__.'/TestSetup.php';
+require_once __DIR__ . '/TestSetup.php';
 
-class DBConnectTest extends TestSetup{
+class DBConnectTest extends TestSetup
+{
 
     protected static $className = 'DBConnect';
 
-    function test__instanceIsValid(){
+    function test__instanceIsValid()
+    {
         // Pas d'erreur lors de l'instantiation
         $db = new DBConnect();
 

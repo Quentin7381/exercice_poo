@@ -13,7 +13,8 @@
  * @method static file_not_found()
  * @method static pdo_invalid_query()
  */
-class ExceptionFactory {
+class ExceptionFactory
+{
     /**
      * Instance de la classe
      * Permet l'injection de mock pour les tests unitaires
@@ -112,13 +113,15 @@ class ExceptionFactory {
      *
      * @return ExceptionFactory
      */
-    public static function getInstance(): ExceptionFactory{
+    public static function getInstance(): ExceptionFactory
+    {
         $instance = static::$instance ?? new static();
         $instance->reset();
         return $instance;
     }
 
-    public function set(string $property, $value){
+    public function set(string $property, $value)
+    {
         $this->$property = $value;
     }
 
@@ -127,9 +130,10 @@ class ExceptionFactory {
      *
      * @return void
      */
-    public function reset(){
+    public function reset()
+    {
         $properties = ['message', 'code', 'file', 'line', 'trace', 'class', 'previous', 'backtrace', 'function', 'arguments', 'backtraceOffset'];
-        foreach($properties as $property){
+        foreach ($properties as $property) {
             $this->set($property, null);
         }
     }
@@ -140,7 +144,8 @@ class ExceptionFactory {
      * @param int $offset
      * @return void
      */
-    public function getStack(int $offset = 0){
+    public function getStack(int $offset = 0)
+    {
         $offset = $offset + static::ADDITIONAL_OFFSET;
 
         $this->set('backtrace', debug_backtrace());
@@ -156,10 +161,11 @@ class ExceptionFactory {
      *
      * @return void
      */
-    public function setHeader(){
+    public function setHeader()
+    {
         $message = '';
         $message .= 'In ' . $this->class;
-        $message .='::' . $this->function;
+        $message .= '::' . $this->function;
         @$message .= '(' . implode(', ', $this->arguments) . '):' . PHP_EOL;
         $message .= 'Line ' . $this->line;
         $message .= ' in ' . $this->file . PHP_EOL;
@@ -174,7 +180,8 @@ class ExceptionFactory {
      * @param string $exceptionClass
      * @return Throwable
      */
-    public function generate(string $exceptionClass): Throwable{
+    public function generate(string $exceptionClass): Throwable
+    {
         $this->getStack($this->backtraceOffset ?? 0);
         $this->setHeader();
         return new $exceptionClass($this->message, $this->code, $this->previous);
@@ -200,11 +207,10 @@ class ExceptionFactory {
         ?string $hint = null,
         ?Throwable $previous = null,
         ?int $backtraceOffset = null
-    ): LogicException
-    {
-        
-        $message = 'The parameter "'.$parameterName.'" has an invalid value.';
-        @$message .='Expected: "'.$expectedValue.'", but received: "'.$parameterValue.'".';
+    ): LogicException {
+
+        $message = 'The parameter "' . $parameterName . '" has an invalid value.';
+        @$message .= 'Expected: "' . $expectedValue . '", but received: "' . $parameterValue . '".';
         if ($hint) {
             $message .= PHP_EOL . $hint;
         }
@@ -238,14 +244,13 @@ class ExceptionFactory {
         ?string $hint = null,
         ?Throwable $previous = null,
         ?int $backtraceOffset = null
-    ): InvalidArgumentException
-    {
-        if(is_array($expectedTypes)){
+    ): InvalidArgumentException {
+        if (is_array($expectedTypes)) {
             $expectedType = implode(', ', $expectedTypes);
         }
 
-        $message = 'The argument "'.$argumentName.'" has an invalid type.';
-        $message .='Expected: "'.$expectedType.'", but received: "'.gettype($argumentValue).'".';
+        $message = 'The argument "' . $argumentName . '" has an invalid type.';
+        $message .= 'Expected: "' . $expectedType . '", but received: "' . gettype($argumentValue) . '".';
         if ($hint) {
             $message .= PHP_EOL . $hint;
         }
@@ -277,10 +282,9 @@ class ExceptionFactory {
         ?string $hint = null,
         ?Throwable $previous = null,
         ?int $backtraceOffset = null
-    ): InvalidArgumentException
-    {
-        $message = 'The argument "'.$argumentName.'" has a missing key.';
-        $message .='Expected: "'.$key.'".';
+    ): InvalidArgumentException {
+        $message = 'The argument "' . $argumentName . '" has a missing key.';
+        $message .= 'Expected: "' . $key . '".';
         if ($hint) {
             $message .= PHP_EOL . $hint;
         }
@@ -310,9 +314,8 @@ class ExceptionFactory {
         ?string $hint = null,
         ?Throwable $previous = null,
         ?int $backtraceOffset = null
-    ): Exception
-    {
-        $message = 'The file "'.$path.'" was not found.';
+    ): Exception {
+        $message = 'The file "' . $path . '" was not found.';
         if ($hint) {
             $message .= PHP_EOL . $hint;
         }
@@ -344,11 +347,10 @@ class ExceptionFactory {
         ?string $hint = null,
         ?Throwable $previous = null,
         ?int $backtraceOffset = null
-    ): PDOException
-    {
+    ): PDOException {
         $message = 'A PDO query failed with :' . PHP_EOL;
-        $message .= 'Query: "'.$query.'".' . PHP_EOL;
-        $message .= 'Parameters: "'.implode(', ', $parameters).'".' . PHP_EOL;
+        $message .= 'Query: "' . $query . '".' . PHP_EOL;
+        $message .= 'Parameters: "' . implode(', ', $parameters) . '".' . PHP_EOL;
 
         if ($hint) {
             $message .= PHP_EOL . $hint;
@@ -385,10 +387,9 @@ class ExceptionFactory {
         ?string $hint = null,
         ?Throwable $previous = null,
         ?int $backtraceOffset = null
-    ): InvalidArgumentException
-    {
-        $message = 'The array "'.$argumentName.'" has an invalid count of elements.';
-        $message .='Expected: "'.$minCount.'" to "'.$maxCount.'", but received: "'.$actualCount.'".';
+    ): InvalidArgumentException {
+        $message = 'The array "' . $argumentName . '" has an invalid count of elements.';
+        $message .= 'Expected: "' . $minCount . '" to "' . $maxCount . '", but received: "' . $actualCount . '".';
         if ($hint) {
             $message .= PHP_EOL . $hint;
         }

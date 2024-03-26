@@ -1,5 +1,7 @@
 # Versions du programme Carnet de Contact
 
+## 1.5.1 Formattage des documents php
+
 ## 1.4.2 Commentaires et typage
 
 Fix mineurs

@@ -5,14 +5,16 @@
  * La connexion est directement parametree
  * @property PDO $instance Instance de connexion à la base de données
  */
-class DBConnect extends PDO{
+class DBConnect extends PDO
+{
     protected static $instance = null;
 
     /**
      * @return DBConnect Instance Singleton de la classe
      */
-    public static function get(){
-        if(self::$instance == null){
+    public static function get()
+    {
+        if (self::$instance == null) {
             self::$instance = new DBConnect();
         }
         return self::$instance;
@@ -22,13 +24,15 @@ class DBConnect extends PDO{
      * Constructeur de la classe
      * Initialise la connexion à la base de données
      */
-    public function __construct(){
+    public function __construct()
+    {
         $config = $this->getConfig();
         parent::__construct(
             'mysql:host=' . $config['host'] .
             ';dbname=' . $config['dbname'],
             $config['user'],
-            $config['password']);
+            $config['password']
+        );
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
@@ -37,7 +41,8 @@ class DBConnect extends PDO{
      * Permet une surcharge future pour ne pas avoir les identifiants en dur
      * @return array Configuration de la connexion
      */
-    public function getConfig():array{
+    public function getConfig(): array
+    {
         return array(
             'host' => 'localhost',
             'dbname' => 'carnet_contact',

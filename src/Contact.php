@@ -1,6 +1,6 @@
 <?php
 
-if(!defined('SEPARATOR')){
+if (!defined('SEPARATOR')) {
     define('SEPARATOR', '-------------------------' . "\n");
 }
 
@@ -12,7 +12,8 @@ if(!defined('SEPARATOR')){
  * @property string $phone Téléphone du contact
  *  
  */
-class Contact{
+class Contact
+{
     /**
      * Identifiant du contact
      * @var int
@@ -39,7 +40,8 @@ class Contact{
      * @param string $name Nom de la propriété
      * @return mixed
      */
-    public function __get($name){
+    public function __get($name)
+    {
         return $this->$name;
     }
 
@@ -49,7 +51,8 @@ class Contact{
      * @param mixed $value Valeur de la propriété
      * @return void
      */
-    public function __construct($id, $name, $email, $phone){
+    public function __construct($id, $name, $email, $phone)
+    {
         $this->id = $id;
         $this->name = $name;
         $this->email = $email;
@@ -60,7 +63,8 @@ class Contact{
      * Permet d'afficher les informations du contact
      * @return string
      */
-    public function __toString():string{
+    public function __toString(): string
+    {
         $str = 'id: ' . $this->id . "\n";
         $str .= 'nom: ' . $this->name . "\n";
         $str .= 'email: ' . $this->email . "\n";

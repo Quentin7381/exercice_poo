@@ -1,14 +1,15 @@
 <?php
 
 
-if(!defined('SEPARATOR')){
+if (!defined('SEPARATOR')) {
     /**
      * @var string SEPARATOR Séparateur de blocs pour le terminal
      */
     define('SEPARATOR', '-------------------------' . "\n");
 }
 
-class Commands{
+class Commands
+{
     /**
      * @var Commands $instance Instance Singleton
      */
@@ -17,8 +18,9 @@ class Commands{
     /**
      * @return Commands Instance Singleton de la classe
      */
-    public static function get():Commands{
-        if(self::$instance == null){
+    public static function get(): Commands
+    {
+        if (self::$instance == null) {
             self::$instance = new Commands();
         }
         return self::$instance;
@@ -30,7 +32,8 @@ class Commands{
      * @param array $arguments Arguments de la commande
      * @return void
      */
-    public function __call($name, $arguments){
+    public function __call($name, $arguments)
+    {
         echo "La commande $name n'existe pas\n";
     }
 
@@ -38,13 +41,14 @@ class Commands{
      * Affiche la liste des contacts
      * @return void
      */
-    public function list():void{
+    public function list(): void
+    {
         $contacts = ContactManager::get()->find();
 
         echo SEPARATOR;
-        echo 'Liste des contacts:'."\n";
+        echo 'Liste des contacts:' . "\n";
         echo SEPARATOR;
-        foreach($contacts as $contact){
+        foreach ($contacts as $contact) {
             echo $contact;
         }
     }
@@ -53,17 +57,19 @@ class Commands{
      * Quitte l'application
      * @return void
      */
-    public function exit():void{
+    public function exit(): void
+    {
         echo "Au revoir\n";
         sleep(2);
-        exit(0);
+        exit (0);
     }
 
     /**
      * Affiche la liste des commandes disponibles
      * @return void
      */
-    public function help():void{
+    public function help(): void
+    {
         echo SEPARATOR;
         echo "Liste des commandes disponibles\n";
         echo SEPARATOR;
@@ -81,8 +87,9 @@ class Commands{
      * @param string $id Identifiant du contact (represente un INT)
      * @return void
      */
-    public function detail(?string $id = null):void{
-        if($id == null || !is_numeric($id)){
+    public function detail(?string $id = null): void
+    {
+        if ($id == null || !is_numeric($id)) {
             echo SEPARATOR;
             echo "Vous devez spécifier un id valide\n";
             echo "exemple: detail 3\n";
@@ -90,17 +97,20 @@ class Commands{
             return;
         }
 
-        $contacts = ContactManager::get()->find(["id"=> $id]);
+        $contacts = ContactManager::get()->find(["id" => $id]);
 
         $contact = $contacts[0] ?? null;
 
-        if(is_null($contact)){
+        if (is_null($contact)) {
             echo SEPARATOR;
             echo "Le contact n'existe pas\n";
             echo SEPARATOR;
             return;
         }
 
+        echo SEPARATOR;
+        echo 'Détails du contact :' . "\n";
+        echo SEPARATOR;
         echo $contact;
     }
 
@@ -111,8 +121,9 @@ class Commands{
      * @param string $phone Téléphone du contact
      * @return void
      */
-    public function create(?string $name = null, ?string $email = null, ?string $phone = null):void{
-        if($name == null || $email == null || $phone == null){
+    public function create(?string $name = null, ?string $email = null, ?string $phone = null): void
+    {
+        if ($name == null || $email == null || $phone == null) {
             echo SEPARATOR;
             echo "Vous devez spécifier un nom, un email et un numéro de téléphone\n";
             echo "exemple: create John jhon@mail.com 0123456789\n";
@@ -133,8 +144,9 @@ class Commands{
      * @param string $id Identifiant du contact (represente un INT)
      * @return void
      */
-    public function delete(?string $id = null):void{
-        if($id == null || !is_numeric($id)){
+    public function delete(?string $id = null): void
+    {
+        if ($id == null || !is_numeric($id)) {
             echo SEPARATOR;
             echo "Vous devez spécifier un id valide\n";
             echo "exemple: delete 3\n";
@@ -146,10 +158,10 @@ class Commands{
         $contact = $manager->find(['id' => $id])[0] ?? null;
         $success = $manager->delete($id);
 
-        if(!$success){
+        if (!$success) {
             echo SEPARATOR;
             echo "Echec de la suppression\n";
-            if(is_null($contact)){
+            if (is_null($contact)) {
                 echo "Le contact n'existe pas\n";
             }
             echo SEPARATOR;
@@ -170,8 +182,9 @@ class Commands{
      * @param string $phone Téléphone du contact
      * @return void
      */
-    public function update(?string $id = null, ?string $name = null, ?string $email = null, ?string $phone = null):void{
-        if($id == null || $name == null || $email == null || $phone == null){
+    public function update(?string $id = null, ?string $name = null, ?string $email = null, ?string $phone = null): void
+    {
+        if ($id == null || $name == null || $email == null || $phone == null) {
             echo SEPARATOR;
             echo "Vous devez spécifier un id, un nom, un email et un numéro de téléphone\n";
             echo "exemple: update 3 John jhon@mail.com 0123456789\n";
@@ -183,10 +196,10 @@ class Commands{
         $success = $manager->update($id, $name, $email, $phone);
         $contact = new Contact($id, $name, $email, $phone);
 
-        if(!$success){
+        if (!$success) {
             echo SEPARATOR;
             echo "Echec de la mise à jour\n";
-            if(empty($manager->find(['id' => $id]))){
+            if (empty ($manager->find(['id' => $id]))) {
                 echo "Le contact n°$id n'existe pas\n";
             }
             echo SEPARATOR;

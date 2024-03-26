@@ -1,12 +1,14 @@
 <?php
 
-require_once __DIR__.'/TestSetup.php';
+require_once __DIR__ . '/TestSetup.php';
 
-class ContactTest extends TestSetup{
+class ContactTest extends TestSetup
+{
 
     protected static $className = 'Contact';
 
-    function test_gettersWorks(){
+    function test_gettersWorks()
+    {
         $contact = new Contact(
             1,
             'Doe',
@@ -20,7 +22,8 @@ class ContactTest extends TestSetup{
         $this->assertEquals('0123456789', $contact->phone);
     }
 
-    function test_setIsImpossible(){
+    function test_setIsImpossible()
+    {
         $contact = new Contact(
             1,
             'Doe',
@@ -29,7 +32,7 @@ class ContactTest extends TestSetup{
         );
 
         $keys = ['id', 'name', 'email', 'phone'];
-        foreach($keys as $key){
+        foreach ($keys as $key) {
             try {
                 $contact->$key = 'something';
                 $this->fail('Exception not thrown');
