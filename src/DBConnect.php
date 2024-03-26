@@ -49,5 +49,9 @@ class DBConnect extends PDO
             'user' => 'root',
             'password' => ''
         );
+        $filePath = __DIR__ . '/../db.json';
+        if (file_exists($filePath)) {
+            return json_decode(file_get_contents($filePath), true);
+        }
     }
 }
