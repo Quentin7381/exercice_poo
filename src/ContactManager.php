@@ -12,11 +12,11 @@ class ContactManager
     /**
      * @var ContactManager $instance Instance Singleton
      */
-    protected static ContactManager $instance = null;
+    protected static ?ContactManager $instance = null;
     /**
-     * @var PDO $db Instance de connexion à la base de donnees
+     * @var ?PDO $db Instance de connexion à la base de donnees
      */
-    protected static PDO $db;
+    protected static ?PDO $db = null;
 
     /**
      * @return ContactManager Instance Singleton de la classe

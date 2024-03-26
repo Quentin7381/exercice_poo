@@ -43,12 +43,6 @@ class DBConnect extends PDO
      */
     public function getConfig(): array
     {
-        return array(
-            'host' => 'localhost',
-            'dbname' => 'carnet_contact',
-            'user' => 'root',
-            'password' => ''
-        );
         $filePath = __DIR__ . '/../db.json';
         if (file_exists($filePath)) {
             return json_decode(file_get_contents($filePath), true);
