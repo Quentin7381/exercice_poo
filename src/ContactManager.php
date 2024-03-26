@@ -8,15 +8,15 @@ class ContactManager
     /**
      * @var array $columns Colonnes de la table contact
      */
-    protected static $columns = ['id', 'name', 'email', 'phone_number'];
+    protected static array $columns = ['id', 'name', 'email', 'phone_number'];
     /**
      * @var ContactManager $instance Instance Singleton
      */
-    protected static $instance = null;
+    protected static ContactManager $instance = null;
     /**
      * @var PDO $db Instance de connexion à la base de donnees
      */
-    protected static $db;
+    protected static PDO $db;
 
     /**
      * @return ContactManager Instance Singleton de la classe

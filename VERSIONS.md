@@ -1,5 +1,7 @@
 # Versions du programme Carnet de Contact
 
+## 1.5.3 FIX : typages manquants
+
 ## 1.5.2 FIX : mots de passe plus dans le code
 
 ## 1.5.1 Formattage des documents php

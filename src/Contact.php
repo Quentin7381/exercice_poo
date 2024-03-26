@@ -18,29 +18,29 @@ class Contact
      * Identifiant du contact
      * @var int
      */
-    protected $id;
+    protected string $id;
     /**
      * Nom du contact
      * @var string
      */
-    protected $name;
+    protected string $name;
     /**
      * Email du contact
      * @var string
      */
-    protected $email;
+    protected string $email;
     /**
      * Téléphone du contact
      * @var string
      */
-    protected $phone;
+    protected string $phone;
 
     /**
      * Permet d'acceder aux propriétés de la classe
      * @param string $name Nom de la propriété
      * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->$name;
     }
@@ -51,7 +51,7 @@ class Contact
      * @param mixed $value Valeur de la propriété
      * @return void
      */
-    public function __construct($id, $name, $email, $phone)
+    public function __construct(string $id, string $name, string $email, string $phone)
     {
         $this->id = $id;
         $this->name = $name;
